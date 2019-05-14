@@ -1,0 +1,127 @@
+spring:
+  profiles.active: dev
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+generic:
+  appName: E-test
+  errorLength: 150
+  #secretKey: DOLOOP_SECURITY
+  #keyExpiration: 1800000 
+  skipUrlPattern:  /error,/,index,/home,/api/**,/console/**
+
+  
+
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: doLoopTech
+    
+jwt:
+  header: Authorization
+  secret: DOLOOP_SECURITY
+  expiration: 180000000000
+  ##expiration: 120000
+  route:
+    authentication:
+      path: auth
+      refresh: refresh
+
+org:
+  quartz:
+    threadPool:
+      threadCount: 5
+      
+      
+endpoints:
+  beans:
+    sensitive: false            
+  actuator:
+      sensitive: true            
+  configprops:
+    sensitive: false            
+  dump:
+    sensitive: false            
+  health:
+    sensitive: false            
+  metrics:
+    sensitive: false            
+  trace:
+    sensitive: false            
+  auditevents:
+    sensitive: false            
+  env:
+    sensitive: false            
+  mappings:
+    sensitive: false            
+  shutdown:
+    sensitive: true 
+    enabled  : true 
+
+management:
+  security:
+    enabled: false
+    
+    
+
+#dev 
+---
+server.port: 7773
+server.servlet.context-path : /test
+server.contextPath:
+spring:
+  profiles: dev
+  datasource: 
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test-db?useSSL=false     
+    username: root
+    password: root
+    max-pool-size: 100
+    
+hibernate:
+  show_sql : true
+  hbm2ddl.auto: update
+  dialect: org.hibernate.dialect.MySQL5Dialect  
+
+envers: 
+  audit_table_suffix: _audit_log
+
+quartz:
+  enabled: true
+
+
+logging:
+  level:
+    org:
+      springframework: ERROR
+      hibernate: INFO
+      hibernate.SQL: DEBUG
+      hibernate.type.descripter.sql: TRACE
+    com.test: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    #console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: /doloop/taskflow/taskflow-api/logs/adminLog.log  
+
+
+#prod  
+---
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://34.211.134.109:3306/ebridge-db?useSSL=false
+    username: smalkar
+    password: testpassword
+quartz:
+  enabled: true
+  
+logging:
+  level:
+    org:
+    com.test: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file: test.log       
