@@ -13,12 +13,16 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.metadata.HikariDataSourcePoolMetadata;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.test.AppConfig.TaskflowJPAConfig;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TestApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	
 	@Autowired
-    DataSource dataSource;
+    HikariDataSource dataSource;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TestApplication.class, args);
@@ -48,8 +52,9 @@ public class TestApplication extends SpringBootServletInitializer implements Com
 	
 	@Override
 	public void run(String... args) throws Exception {
-
+		HikariPool hikariPool = new HikariPool(dataSource);
         System.out.println("DATASOURCE = " + dataSource);
+        System.out.println("Total Active Total Connections :" +hikariPool.getActiveConnections() +" total Total Connections :" +hikariPool.getTotalConnections());
         System.out.println("SCEMA NAME = " + dataSource.getConnection().getCatalog());
 
     }

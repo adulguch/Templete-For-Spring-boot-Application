@@ -37,12 +37,16 @@ public class TaskflowJPAConfig {
 
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+    HikariDataSource dataSource;
+
 
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		sessionFactory.setDataSource(tsdataSource());
+		sessionFactory.setDataSource(dataSource);
 		sessionFactory.setPackagesToScan("com.test.model");
 		sessionFactory.setHibernateProperties(hibernateProperties());
 		
@@ -50,16 +54,17 @@ public class TaskflowJPAConfig {
 	}
 
 
-	@Bean
-	public DataSource tsdataSource() {
-		HikariDataSource dataSource = new HikariDataSource();
-		dataSource.setDriverClassName(env.getRequiredProperty("spring.datasource.driver-class-name"));
-		dataSource.setJdbcUrl(env.getRequiredProperty("spring.datasource.url"));
-		dataSource.setUsername(env.getRequiredProperty("spring.datasource.username"));
-		dataSource.setPassword(env.getRequiredProperty("spring.datasource.password"));
-		dataSource.setMaximumPoolSize(Integer.parseInt(env.getRequiredProperty("spring.datasource.max-pool-size")));
-		return dataSource;
-	}
+//	@Bean
+//	public DataSource tsdataSource() {
+//		HikariDataSource dataSource = new HikariDataSource();
+////		dataSource.setDataSourceClassName("");
+//		dataSource.setDriverClassName(env.getRequiredProperty("spring.datasource.driver-class-name"));
+//		dataSource.setJdbcUrl(env.getRequiredProperty("spring.datasource.url"));
+//		dataSource.setUsername(env.getRequiredProperty("spring.datasource.username"));
+//		dataSource.setPassword(env.getRequiredProperty("spring.datasource.password"));
+//		dataSource.setMaximumPoolSize(Integer.parseInt(env.getRequiredProperty("spring.datasource.hikari.max-pool-size")));
+//		return dataSource;
+//	}
 	
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
@@ -97,7 +102,7 @@ public class TaskflowJPAConfig {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory1() {
 		final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(tsdataSource());
+		emf.setDataSource(dataSource);
 		emf.setPackagesToScan(new String[] { "com.test.model" });
 		final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		emf.setJpaVendorAdapter(vendorAdapter);

@@ -72,14 +72,21 @@ server.contextPath:
 spring:
   profiles: dev
   datasource: 
+    type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test-db?useSSL=false     
     username: root
     password: root
-    max-pool-size: 100
+    hikari: 
+       max-pool-size: 5
+       connection-test-query: SELECT 1 FROM APP_USER
+       minimum-idle: 1
+       maximum-pool-size: 5
+       #pool-name: POOOOOOOOL-1
+       auto-commit: false
     
 hibernate:
-  show_sql : true
+  show_sql: false
   hbm2ddl.auto: update
   dialect: org.hibernate.dialect.MySQL5Dialect  
 
@@ -97,6 +104,7 @@ logging:
       hibernate: INFO
       hibernate.SQL: DEBUG
       hibernate.type.descripter.sql: TRACE
+    com.zaxxer : DEBUG
     com.test: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
@@ -117,10 +125,6 @@ spring:
 quartz:
   enabled: true
   
-logging:
-  level:
-    org:
-    com.test: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
